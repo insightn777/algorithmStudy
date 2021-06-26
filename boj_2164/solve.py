@@ -1,4 +1,4 @@
-from queue import Queue
+from collections import deque
 
 def solve(n: int) -> int:
     if n == 1:
@@ -6,21 +6,17 @@ def solve(n: int) -> int:
     elif n == 2:
         return 2
 
-    q = Queue()
-    for i in range(0, n+1, 2):
-        q.put_nowait(i)
+    d = deque([ i for i in range(0, n+1, 2) ])
     
     if (n % 2 == 0):
-        q.get_nowait()
+        d.popleft()
 
     card: int
-    while q:
-        card = q.get_nowait()
-        if q.empty():
-            return card
-        else:
-            q.put_nowait(q.get_nowait())
+    while len(d) > 0:
+        card = d.popleft()
+        d.rotate(-1)
 
+    return card
 
 if __name__ == '__main__':
     n = int(input())
