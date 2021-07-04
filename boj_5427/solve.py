@@ -10,18 +10,14 @@ def solve(col_cnt: int, row_cnt: int, field) -> int:
 
     for r in range(row_cnt):
         for c in range(col_cnt):
-            spot = field[r][c]
-            if spot == '*':
+            if field[r][c] == '*':
                 deq.append((True, r, c, 0))
-            elif spot == '@':
-                sg = (False, r, c, 1)
-                deq.append(sg)
+            elif field[r][c] == '@':
+                deq.append((False, r, c, 0))
                 visit_field[r][c] = 1
-                sg_stack.append(0)
+                sg_stack.append(1)
 
-    del spot
-
-    while len(deq) > 0 and sg_stack and success == 0:
+    while sg_stack and success == 0:
         flag, row, col, sec = deq.popleft()
         if flag:
             visit_spot = [
@@ -48,14 +44,13 @@ def solve(col_cnt: int, row_cnt: int, field) -> int:
             ]
 
             for r, c, s in visit_spot:
-                if r >= row_cnt or c <= col_cnt or c < 0 or r < 0:
+                if r >= row_cnt or c >= col_cnt or c < 0 or r < 0:
                     success = s
-                    deq.clear()
                     break
                 elif field[r][c] == '.' and visit_field[r][c] == 0:
                     visit_field[r][c] = 1
                     deq.append((False, r, c, s))
-                    sg_stack.append(0)
+                    sg_stack.append(1)
 
     return 'IMPOSSIBLE' if success == 0 else success
 
